@@ -32,7 +32,7 @@ class _HomeSliderState extends State<HomeSlider> {
           final sliderData = asyncData.hasData ? asyncData.data as List : [];
           return asyncData.hasData
               ? CarouselSlider(
-                  options: CarouselOptions(height: 200.0),
+                  options: CarouselOptions(height: 200.0, autoPlay: true),
                   items: sliderData.map((i) {
                     return Builder(
                       builder: (BuildContext context) {
