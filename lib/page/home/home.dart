@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/const.dart';
+import 'package:shop/page/auth/login.dart';
 import 'package:shop/page/home/widget/home_category.dart';
 import 'package:shop/page/home/widget/home_slider.dart';
+import 'package:shop/provider/auth_provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
   static const routerName = "/";
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthProvider>(
+      builder: (context, auth, child) {
+        return auth.isAuth
+            ? const Home()
+            : FutureBuilder(
+                future: auth.autoLogin(),
+                initialData: false,
+                builder: (context, asyncData) {
+                  if (asyncData.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return asyncData.data as bool ? const Home() : LoginPage();
+                });
+      },
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +63,39 @@ class HomePage extends StatelessWidget {
         SizedBox(height: 20),
         HomeCategory(),
       ]),
+      drawer: Drawer(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+          child: Column(
+            children: [
+              const SizedBox(
+                  child: Image(image: AssetImage("assets/images/logo.png"))),
+              const SizedBox(height: 20),
+              SizedBox(
+                  height: 500,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.home),
+                          title: const Text("Home page"),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.logout),
+                          title: const Text("Log out"),
+                          onTap: () {
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .logout();
+                          },
+                        )
+                      ],
+                    ),
+                  ))
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
