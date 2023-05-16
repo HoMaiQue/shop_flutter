@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/const.dart';
 import 'package:shop/page/auth/login.dart';
+import 'package:shop/page/cart/cart.dart';
 import 'package:shop/page/home/widget/home_category.dart';
 import 'package:shop/page/home/widget/home_slider.dart';
+import 'package:shop/page/home/widget/special_product.dart';
 import 'package:shop/provider/auth_provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -40,6 +42,16 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("home page"),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, CartPage.routerName);
+                },
+                child: const Icon(Icons.shopping_cart)),
+          )
+        ],
       ),
       body: const Column(children: [
         HomeSlider(),
@@ -62,6 +74,23 @@ class Home extends StatelessWidget {
         ),
         SizedBox(height: 20),
         HomeCategory(),
+        SizedBox(height: 20),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Sản phẩm đặt biệt",
+                style: fdCategory,
+              ),
+              Text("Tất cả (4)",
+                  style: TextStyle(color: Colors.black26, fontSize: 18))
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
+        SpecialProduct()
       ]),
       drawer: Drawer(
         child: Container(
