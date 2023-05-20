@@ -6,6 +6,7 @@ import 'package:shop/page/category/category.dart';
 import 'package:shop/page/home/home.dart';
 import 'package:shop/page/product/product.dart';
 import 'package:shop/provider/auth_provider.dart';
+import 'package:shop/provider/cart_provider.dart';
 import 'package:shop/provider/category_provider.dart';
 import 'package:shop/provider/product.provider.dart';
 import 'package:shop/provider/slider_provider.dart';
@@ -17,6 +18,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => CategoryProvider()),
       ChangeNotifierProvider(create: (_) => AuthProvider()),
       ChangeNotifierProvider(create: (_) => ProductProvider()),
+      ChangeNotifierProvider(create: (_) => CartProvider()),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,

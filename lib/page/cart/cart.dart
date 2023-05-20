@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:provider/provider.dart';
+import 'package:shop/provider/cart_provider.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -13,41 +15,50 @@ class CartPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: const Image(
-                        image:
-                            NetworkImage("http://placeimg.com/640/480/animals"),
-                        fit: BoxFit.fill),
-                    title: const Text(
-                      "Ratione non est.",
-                      maxLines: 2,
-                    ),
-                    subtitle: Text(intl.NumberFormat.simpleCurrency(
-                            locale: "vi", decimalDigits: 0)
-                        .format(20000323)),
-                    trailing: SizedBox(
-                      width: MediaQuery.of(context).size.width / 4,
-                      child: const Row(
-                        children: [
-                          Icon(Icons.remove),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text("123",
-                                style: TextStyle(color: Colors.blue)),
+          Consumer<CartProvider>(
+            builder: ((context, value, child) {
+              List<CartItem> cart = value.cart.values.toList();
+              return Positioned.fill(
+                child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Image(
+                            image: NetworkImage(cart[index].imageName),
+                            fit: BoxFit.fill),
+                        title: Text(
+                          cart[index].name,
+                          maxLines: 2,
+                        ),
+                        subtitle: Text(intl.NumberFormat.simpleCurrency(
+                                locale: "vi", decimalDigits: 0)
+                            .format(cart[index].price)),
+                        trailing: SizedBox(
+                          width: MediaQuery.of(context).size.width / 4,
+                          child: Row(
+                            children: [
+                              InkWell(onTap: (){
+                                Provider.of<CartProvider>(context).decrease(cart[index].id);
+                              },child: const Icon(Icons.remove)),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(cart[index].quantity.toString(),
+                                    style: const TextStyle(color: Colors.blue)),
+                              ),
+                              InkWell(onTap:(){
+                                Provider.of<CartProvider>(context).increase(cart[index].id);
+                              },child: const Icon(Icons.add))
+                            ],
                           ),
-                          Icon(Icons.add)
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider();
-                },
-                itemCount: 10),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const Divider();
+                    },
+                    itemCount: value.cart.length),
+              );
+            }),
           ),
           Positioned(
               bottom: 10,

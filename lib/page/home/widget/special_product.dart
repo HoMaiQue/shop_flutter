@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 import 'package:shop/models/product_model.dart';
+import 'package:shop/provider/cart_provider.dart';
 import 'package:shop/provider/product.provider.dart';
 
 class SpecialProduct extends StatelessWidget {
@@ -33,7 +34,11 @@ class SpecialProduct extends StatelessWidget {
                           subtitle: Text(intl.NumberFormat.simpleCurrency(
                                   locale: "vi", decimalDigits: 0)
                               .format(productList[index].price)),
-                          trailing: const Icon(Icons.shopping_cart_checkout),
+                          trailing: InkWell(
+                              onTap: () {
+                                Provider.of<CartProvider>(context, listen: false).addCart(productList[index].id, productList[index].image, productList[index].name, productList[index].price);
+                              },
+                              child: const Icon(Icons.shopping_cart_checkout)),
                         );
                       }),
                       separatorBuilder: (context, index) {

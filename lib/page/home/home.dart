@@ -7,6 +7,7 @@ import 'package:shop/page/home/widget/home_category.dart';
 import 'package:shop/page/home/widget/home_slider.dart';
 import 'package:shop/page/home/widget/special_product.dart';
 import 'package:shop/provider/auth_provider.dart';
+import 'package:shop/provider/cart_provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -44,12 +45,17 @@ class Home extends StatelessWidget {
         title: const Text("home page"),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, CartPage.routerName);
-                },
-                child: const Icon(Icons.shopping_cart)),
+            padding: const EdgeInsets.only(right: 20, top: 20),
+            child: Consumer<CartProvider>(builder: (context, value, child) {
+              return Badge(
+                label:  Text(value.cart.length.toString()),
+                child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, CartPage.routerName);
+                    },
+                    child: const Icon(Icons.shopping_cart)),
+              );
+            }),
           )
         ],
       ),
