@@ -72,4 +72,9 @@ class CartProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void removeCart(){
+    cart={};
+    notifyListeners();
+  }
 }

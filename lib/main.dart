@@ -8,6 +8,7 @@ import 'package:shop/page/product/product.dart';
 import 'package:shop/provider/auth_provider.dart';
 import 'package:shop/provider/cart_provider.dart';
 import 'package:shop/provider/category_provider.dart';
+import 'package:shop/provider/order_provider.dart';
 import 'package:shop/provider/product.provider.dart';
 import 'package:shop/provider/slider_provider.dart';
 
@@ -19,6 +20,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => AuthProvider()),
       ChangeNotifierProvider(create: (_) => ProductProvider()),
       ChangeNotifierProvider(create: (_) => CartProvider()),
+      ChangeNotifierProvider(create: (_) => OrderProvider()),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,

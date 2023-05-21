@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
@@ -7,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthProvider extends ChangeNotifier {
   String _token = "";
   int expires_in = 0;
-
+  late Timer timer;
   bool get isAuth {
     return _token.isNotEmpty;
   }
@@ -23,13 +24,16 @@ class AuthProvider extends ChangeNotifier {
           body: jsonEncode({"email": email, "password": password}));
 
       final jsonData = jsonDecode(res.body);
-
       _token = jsonData["access_token"];
       expires_in = jsonData["expires_in"];
+      DateTime timeNow = DateTime.now();
+      DateTime expiresTime = timeNow.add(Duration(seconds: expires_in));
+      startTokenTimer(expiresTime);
       notifyListeners();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      final userData = jsonEncode({"token": _token});
+      final userData = jsonEncode(
+          {"token": _token, "expires_in": expiresTime.toIso8601String()});
       await prefs.setString("userData", userData);
     } catch (e) {
       Future.error(e);
@@ -47,7 +51,9 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      // final userData = jsonDecode(prefs.getString("userData") ?? "");
+      final userData = jsonDecode(prefs.getString("userData") ?? "");
+      DateTime expires = DateTime.parse(userData["expires_in"]);
+      startTokenTimer(expires);
       return true;
     } catch (e) {
       return false;
@@ -60,5 +66,25 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove("userData");
+  }
+
+  Future<void> checkTimeExpires() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final data = jsonDecode(prefs.getString("userData") ?? "");
+    DateTime expires = DateTime.parse(data["expires_in"]);
+
+    if (DateTime.now().isAfter(expires)) {
+      logout();
+      stopTokenTimer();
+    }
+  }
+
+  void startTokenTimer(DateTime timeExpires) {
+    var timeUntil = timeExpires.difference(DateTime.now());
+    timer = Timer(timeUntil, checkTimeExpires);
+  }
+
+  void stopTokenTimer() {
+    timer.cancel();
   }
 }
