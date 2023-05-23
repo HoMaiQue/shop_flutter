@@ -31,4 +31,26 @@ class OrderProvider extends ChangeNotifier {
       return Future.error(e);
     }
   }
+
+  Future<List> getOrderedList() async {
+    const url = 'http://apiforlearning.zendvn.com/api/mobile/orders';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userData = jsonDecode(prefs.getString("userData") ?? "");
+
+    final token = userData["access_token"];
+
+    try {
+      final res = await http.get(Uri.parse(url), headers: <String, String>{
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": "Bearer $token"
+      });
+
+      if (res.statusCode == 200) {
+        return jsonDecode(res.body);
+      }
+      return [];
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 }

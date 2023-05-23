@@ -32,8 +32,10 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      final userData = jsonEncode(
-          {"token": _token, "expires_in": expiresTime.toIso8601String()});
+      final userData = jsonEncode({
+        "access_token": _token,
+        "expires_in": expiresTime.toIso8601String()
+      });
       await prefs.setString("userData", userData);
     } catch (e) {
       Future.error(e);

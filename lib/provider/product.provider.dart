@@ -21,4 +21,16 @@ class ProductProvider extends ChangeNotifier {
       return Future.error(e);
     }
   }
+
+  Future<ProductModel> getProductById(int id) async {
+    try {
+      final url = "http://apiforlearning.zendvn.com/api/mobile/products/$id";
+      final res = await http.get(Uri.parse(url));
+      final jsonData = jsonDecode(res.body);
+      ProductModel product = ProductModel.fromJson(jsonEncode(jsonData));
+      return product;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 }

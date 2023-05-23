@@ -4,6 +4,7 @@ import 'package:shop/page/auth/login.dart';
 import 'package:shop/page/cart/cart.dart';
 import 'package:shop/page/category/category.dart';
 import 'package:shop/page/home/home.dart';
+import 'package:shop/page/order/ordered.dart';
 import 'package:shop/page/product/product.dart';
 import 'package:shop/provider/auth_provider.dart';
 import 'package:shop/provider/cart_provider.dart';
@@ -30,7 +31,8 @@ void main() {
         CategoryPage.routerName: (context) => const CategoryPage(),
         ProductPage.routerName: (context) => const ProductPage(),
         LoginPage.routerName: (context) => LoginPage(),
-        CartPage.routerName: (context) => const CartPage()
+        CartPage.routerName: (context) => const CartPage(),
+        OrderedPage.routerName: (context) => const OrderedPage(),
       },
     ),
   ));

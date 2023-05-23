@@ -13,6 +13,7 @@ class ProductModel {
   String description;
   bool is_new;
   int category_id;
+
   ProductModel({
     required this.id,
     required this.name,
